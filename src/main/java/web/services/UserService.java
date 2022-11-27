@@ -1,5 +1,6 @@
 package web.services;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -16,15 +17,14 @@ import java.util.SortedSet;
 
 @Service
 @Transactional(readOnly = true)
-@PropertySource("classpath:app-config.properties")
 public class UserService {
 
     private final UserRepository userRepository;
 
     private final RequestRepository requestRepository;
 
-    @Value("${user-history-limit}")
-    private int historyLimit;
+    // TODO: make a properties
+    private static final int historyLimit = 10;
 
     private final AreaChecker areaChecker;
 
@@ -33,6 +33,13 @@ public class UserService {
         this.userRepository = userRepository;
         this.requestRepository = requestRepository;
         this.areaChecker = areaChecker;
+    }
+
+    // TODO: add session management
+    @PostConstruct
+    public void init() {
+        userRepository.deleteAll();
+        requestRepository.deleteAll();
     }
 
     // TODO: add session management
