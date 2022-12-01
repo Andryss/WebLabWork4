@@ -11,3 +11,17 @@ public class WebLab4Application {
 	}
 
 }
+
+/*
+
+Congratulation! You found it!
+
+    /\_____/\
+   /  o   o  \
+  ( ==  ^  == )
+   )         (
+  (           )
+ ( (  )   (  ) )
+(__(__)___(__)__)
+
+ */

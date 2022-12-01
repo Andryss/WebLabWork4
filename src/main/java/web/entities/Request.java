@@ -1,9 +1,6 @@
 package web.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import org.hibernate.validator.constraints.CodePointLength;
-import org.hibernate.validator.constraints.Range;
 
 import java.util.Date;
 
@@ -16,37 +13,27 @@ public class Request implements Comparable<Request> {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "created_time")
+    @Column(name = "created_time", nullable = false)
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdTime;
 
-    // TODO: add type converter
-    @Column(name = "x")
-    @NotNull(message = "X should not be empty")
-    @Range(min = -5, max = 3, message = "X must be in range (-5..3)")
+    @Column(name = "x", nullable = false)
     private Integer x;
 
-    // TODO: add type converter
-    @Column(name = "y")
-    @NotNull(message = "Y should not be empty")
-    @Range(min = -5, max = 3, message = "Y must be in range (-5..3)")
+    @Column(name = "y", nullable = false)
     private Double y;
 
-    // TODO: add type converter
-    @Column(name = "r")
-    @NotNull(message = "R should not be empty")
-    @Positive(message = "R must be positive")
-    @Max(value = 3, message = "R must be less than 3")
+    @Column(name = "r", nullable = false)
     private Integer r;
 
-    @Column(name = "result")
-    private boolean result;
+    @Column(name = "result", nullable = false)
+    private Boolean result;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User owner;
+    private Person owner;
 
-    public Request(Integer x, Double y, Integer r, boolean result) {
+    public Request(Integer x, Double y, Integer r, Boolean result) {
         this.x = x;
         this.y = y;
         this.r = r;
@@ -96,19 +83,19 @@ public class Request implements Comparable<Request> {
         this.r = r;
     }
 
-    public boolean isResult() {
+    public Boolean isResult() {
         return result;
     }
 
-    public void setResult(boolean result) {
+    public void setResult(Boolean result) {
         this.result = result;
     }
 
-    public User getOwner() {
+    public Person getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(Person owner) {
         this.owner = owner;
     }
 

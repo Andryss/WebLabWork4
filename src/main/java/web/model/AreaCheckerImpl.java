@@ -1,10 +1,7 @@
 package web.model;
 
-import org.springframework.stereotype.Component;
 import web.entities.Request;
 
-// TODO: delete component
-@Component
 public class AreaCheckerImpl implements AreaChecker {
     @Override
     public boolean check(Request request) {

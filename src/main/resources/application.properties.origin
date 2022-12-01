@@ -10,3 +10,6 @@ spring.datasource.password=???
 ### Hibernate config ###
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.properties.hibernate.show_sql=true
+
+### Application properties ###
+user-history-limit=10
