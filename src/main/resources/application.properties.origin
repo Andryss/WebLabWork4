@@ -13,3 +13,5 @@ spring.jpa.properties.hibernate.show_sql=true
 
 ### Application properties ###
 user-history-limit=10
+
+forbidden-username=big striped fly

@@ -2,38 +2,24 @@ package web.entities;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PersonDTO {
 
-    @NotNull(message = "should not be null")
-    @NotEmpty(message = "should not be empty")
+    @NotNull(message = "Username should not be null")
+    @NotEmpty(message = "Username should not be empty")
+    @Length(min = 3, max = 20, message = "Username must contain from 3 to 20 characters")
     private String username;
 
-    @NotNull(message = "should not be null")
-    @NotEmpty(message = "should not be empty")
+    @NotNull(message = "Password should not be null")
+    @NotEmpty(message = "Password should not be empty")
+    @Length(min = 3, max = 20, message = "Password must contain from 3 to 20 characters")
     private String password;
-
-    public PersonDTO(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public PersonDTO() {
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

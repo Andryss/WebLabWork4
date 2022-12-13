@@ -2,6 +2,8 @@ package web.util;
 
 import org.springframework.validation.Errors;
 
+import java.util.StringJoiner;
+
 public class RequestFormatException extends RuntimeException {
 
     private final Errors errors;
@@ -12,8 +14,8 @@ public class RequestFormatException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        StringBuilder builder = new StringBuilder();
-        errors.getFieldErrors().forEach(fieldError -> builder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append(";"));
-        return builder.toString();
+        StringJoiner joiner = new StringJoiner("; ");
+        errors.getFieldErrors().forEach(fieldError -> joiner.add(fieldError.getDefaultMessage()));
+        return joiner.toString();
     }
 }

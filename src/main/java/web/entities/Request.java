@@ -11,14 +11,14 @@ public class Request implements Comparable<Request> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @Column(name = "created_time", nullable = false)
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdTime;
 
     @Column(name = "x", nullable = false)
-    private Integer x;
+    private Double x;
 
     @Column(name = "y", nullable = false)
     private Double y;
@@ -33,7 +33,7 @@ public class Request implements Comparable<Request> {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Person owner;
 
-    public Request(Integer x, Double y, Integer r, Boolean result) {
+    public Request(Double x, Double y, Integer r, Boolean result) {
         this.x = x;
         this.y = y;
         this.r = r;
@@ -43,11 +43,11 @@ public class Request implements Comparable<Request> {
     public Request() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -59,11 +59,11 @@ public class Request implements Comparable<Request> {
         this.createdTime = createdTime;
     }
 
-    public Integer getX() {
+    public Double getX() {
         return x;
     }
 
-    public void setX(Integer x) {
+    public void setX(Double x) {
         this.x = x;
     }
 
