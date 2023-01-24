@@ -1,13 +1,11 @@
 package web.security;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import web.entities.Person;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Objects;
 
 public class PersonDetails implements UserDetails {
 
@@ -50,6 +48,10 @@ public class PersonDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Person getPerson() {
+        return person;
     }
 
     @Override

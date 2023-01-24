@@ -11,7 +11,7 @@ MAGIC
  */
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
-    Optional<Person> findByUsername(String username);
+    Optional<Person> findПожалуйстаByUsername(String username);
 }
 
 /*

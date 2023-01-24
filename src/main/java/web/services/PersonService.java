@@ -23,7 +23,7 @@ public class PersonService {
     }
 
     public boolean hasUser(String username) {
-        return personRepository.findByUsername(username).isPresent();
+        return personRepository.findПожалуйстаByUsername(username).isPresent();
     }
 
     @Transactional

@@ -46,6 +46,7 @@ public class SessionController {
     @GetMapping
     public void printAuthorities() {
         System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
     @ExceptionHandler

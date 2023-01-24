@@ -2,19 +2,15 @@ package web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -22,21 +18,20 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import web.entities.PersonDTO;
+import web.filters.AuthSuccessHandler;
+import web.filters.OneSessionFilter;
+import web.filters.OneSessionFilterImpl;
 import web.services.PersonDetailsService;
 import web.util.RequestMessageResponse;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Configuration
 public class SecurityConfig {
@@ -67,6 +62,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //noinspection Convert2MethodRef
         http
+                .sessionManagement((c) -> c
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // To track one user session
+                )
                 .csrf((c) -> c
                         .disable() // Cross-site bla bla bla
                 )
@@ -93,6 +91,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(accessDeniedHandler())
                         .authenticationEntryPoint(authenticationEntryPoint())
                 )
+                .addFilterAfter(oneSessionFilter(), UsernamePasswordAuthenticationFilter.class) // Add one session filter
         ;
 
         return http.build();
@@ -120,15 +119,26 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler successHandler() {
-        return (request, response, authentication) -> {
-            Object objToWrite;
-            if (authentication.getPrincipal() instanceof UserDetails) {
-                objToWrite = ((UserDetails) authentication.getPrincipal()).getAuthorities()
-                        .stream().map(GrantedAuthority::getAuthority).toList();
-            } else {
-                objToWrite = new RequestMessageResponse("user " + authentication.getName() + " successfully authenticated");
+        return new AuthSuccessHandler() {
+            @Override
+            public OneSessionFilter oneSessionFilter() {
+                return SecurityConfig.this.oneSessionFilter();
             }
-            writeJsonResponse(response, HttpStatus.OK.value(), objToWrite);
+
+            @Override
+            public void writeJsonResponse(HttpServletResponse response, int status, Object obj) throws IOException {
+                SecurityConfig.this.writeJsonResponse(response, status, obj);
+            }
+        };
+    }
+
+    @Bean
+    public OneSessionFilter oneSessionFilter() {
+        return new OneSessionFilterImpl() {
+            @Override
+            public AuthenticationFailureHandler failureHandler() {
+                return SecurityConfig.this.failureHandler();
+            }
         };
     }
 

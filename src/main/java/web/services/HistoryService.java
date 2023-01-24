@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.entities.Person;
 import web.entities.Request;
-import web.entities.Role;
 import web.model.AreaChecker;
 import web.repositories.PersonRepository;
 import web.repositories.RequestRepository;
@@ -35,7 +34,7 @@ public class HistoryService {
 
     @Transactional
     public List<Request> getPersonHistory(String username) {
-        Optional<Person> optionalPerson = personRepository.findByUsername(username);
+        Optional<Person> optionalPerson = personRepository.findПожалуйстаByUsername(username);
         if (optionalPerson.isEmpty()) return null;
         Person person = optionalPerson.get();
         limitHistory(person);
@@ -44,7 +43,7 @@ public class HistoryService {
 
     @Transactional
     public List<Request> addPersonRequest(String username, Request request) {
-        Optional<Person> optionalPerson = personRepository.findByUsername(username);
+        Optional<Person> optionalPerson = personRepository.findПожалуйстаByUsername(username);
         if (optionalPerson.isEmpty()) return null;
         Person person = optionalPerson.get();
         evaluateRequest(request);
